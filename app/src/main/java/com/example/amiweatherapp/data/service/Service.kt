@@ -1,5 +1,6 @@
 package com.example.amiweatherapp.data.service
 
+import com.example.amiweatherapp.data.local.model.WeatherResp
 import com.example.amiweatherapp.data.local.model.WeatherResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -23,4 +24,11 @@ interface Service {
         @Query("lang") lang: String,
         @Query("units") units: String
     ): Response<WeatherResponse>
+
+    @GET("current.json")
+    suspend fun fetchWeather(
+        @Query("key") apiKey: String,
+        @Query("q") latAndLon: String,
+        @Query("aqi") aqi: String,
+    ): Response<WeatherResp>
 }

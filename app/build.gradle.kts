@@ -93,8 +93,25 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
 
+    //Coil
+    implementation(libs.coil.compose)
+
+    //Coroutines
+    implementation (libs.jetbrains.kotlinx.coroutines.core)
+    implementation (libs.kotlinx.coroutines.android)
+
+    //Location
     implementation (libs.accompanist.permissions)
-    implementation ("com.google.android.gms:play-services-location:21.3.0")
+    implementation (libs.play.services.location)
+
+    //Pull to refresh
+    implementation ("androidx.compose.material:material:1.4.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation ("androidx.compose.material3:material3:1.3.0")
+    implementation ("androidx.compose.material3:material3-window-size-class:1.3.0")
+    implementation ("androidx.compose.material3:material3-adaptive-navigation-suite:1.4.0-alpha01")
+
+
 }
 kapt {
     correctErrorTypes = true
