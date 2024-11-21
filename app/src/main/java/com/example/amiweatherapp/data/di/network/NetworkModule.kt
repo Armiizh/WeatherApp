@@ -15,9 +15,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private val API_KEY = "094f8efd809ddffb67ce9f8309c7ec0d"
-
-
     @Provides
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
@@ -37,8 +34,7 @@ object NetworkModule {
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-//            .baseUrl("https://api.openweathermap.org/data/2.5/")
-            .baseUrl("http://api.weatherapi.com/v1")
+            .baseUrl("https://api.weatherapi.com/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()

@@ -1,56 +1,39 @@
 package com.example.amiweatherapp.domain.usecases
 
 import android.util.Log
-import com.example.amiweatherapp.data.local.dao.WeatherRespDao
 import com.example.amiweatherapp.data.local.dao.WeatherResponseDao
-import com.example.amiweatherapp.data.local.model.Clouds
-import com.example.amiweatherapp.data.local.model.Coord
-import com.example.amiweatherapp.data.local.model.Main
-import com.example.amiweatherapp.data.local.model.Sys
-import com.example.amiweatherapp.data.local.model.Weather
-import com.example.amiweatherapp.data.local.model.WeatherResp
+import com.example.amiweatherapp.data.local.model.CurrentWeather
+import com.example.amiweatherapp.data.local.model.Location
+import com.example.amiweatherapp.data.local.model.WeatherCondition
 import com.example.amiweatherapp.data.local.model.WeatherResponse
-import com.example.amiweatherapp.data.local.model.Wind
 import com.example.amiweatherapp.data.service.Service
 import com.example.amiweatherapp.data.utils.WeatherError
 import javax.inject.Inject
+import com.example.amiweatherapp.data.utils.Result
 
 class FetchWeatherUseCase @Inject constructor(
     private val service: Service,
-    private val weatherResponseDao: WeatherResponseDao,
-    private val weatherRespDao: WeatherRespDao
+    private val weatherResponseDao: WeatherResponseDao
 ) {
-    sealed class Result<out T> {
-        data class Success<out T>(val data: T) : Result<T>()
-        data class Error(val error: WeatherError) : Result<Nothing>()
-    }
-
-
-    //    e098f2674efa47a28e2171146241511
     suspend fun invoke(
         city: String? = null,
-        lat: Double? = null,
-        lon: Double? = null
+        lat: String? = null,
+        lon: String? = null
     ): Result<WeatherResponse> {
         return try {
             val response = if (city != null) {
-                service.fetchWeather("e098f2674efa47a28e2171146241511", city, "no")
-//                service.fetchWeatherForCity(
-//                    city,
-//                    "094f8efd809ddffb67ce9f8309c7ec0dY",
-//                    "ru",
-//                    "metric"
-//                )
+                Log.d(
+                    "city",
+                    "city = $city"
+                )
+                service.fetchWeather("e098f2674efa47a28e2171146241511", city, "no", "ru")
             } else if (lat != null && lon != null) {
                 val q = "$lat,$lon"
-                service.fetchWeather("e098f2674efa47a28e2171146241511", q, "no")
-//                service.fetchLocalWeather(
-//                    lat,
-//                    lon,
-//                    "094f8efd809ddffb67ce9f8309c7ec0d",
-//                    "ru",
-//                    "metric"
-//                )
+                Log.d(
+                    "CHECK",
+                    "lat = $lat, lon = $lon"
+                )
+                service.fetchWeather("e098f2674efa47a28e2171146241511", q, "no", "ru")
             } else {
                 Log.d(
                     "CHECK",
@@ -62,58 +45,34 @@ class FetchWeatherUseCase @Inject constructor(
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
-                    val data = WeatherResp(
-
+                    val data = WeatherResponse(
+                        location = Location(
+                            name = body.location.name,
+                            region = body.location.region,
+                            country = body.location.country,
+                            lat = body.location.lat,
+                            lon = body.location.lon
+                        ),
+                        current = CurrentWeather(
+                            condition = WeatherCondition(
+                                text = body.current.condition.text,
+                                icon = body.current.condition.icon
+                            ),
+                            temperatureC = body.current.temperatureC,
+                            temperatureF = body.current.temperatureF,
+                            feelsLikeC = body.current.feelsLikeC,
+                            feelsLikeF = body.current.feelsLikeF,
+                            windKph = body.current.windKph,
+                            windMph = body.current.windMph,
+                            windDirection = body.current.windDirection,
+                            humidity = body.current.humidity,
+                            gustKph = body.current.gustKph,
+                            gustMph = body.current.gustMph
+                        )
                     )
-//                    val weatherData = WeatherResponse(
-//                        coord = Coord(
-//                            lon = body.coord.lon,
-//                            lat = body.coord.lat
-//                        ),
-//                        weather = body.weather.map { weather ->
-//                            Weather(
-//                                id = weather.id,
-//                                main = weather.main,
-//                                description = weather.description,
-//                                icon = weather.icon
-//                            )
-//                        },
-//                        base = body.base,
-//                        main = Main(
-//                            temp = body.main.temp,
-//                            feels_like = body.main.feels_like,
-//                            temp_min = body.main.temp_min,
-//                            temp_max = body.main.temp_max,
-//                            pressure = body.main.pressure,
-//                            humidity = body.main.humidity,
-//                            sea_level = body.main.sea_level,
-//                            grnd_level = body.main.grnd_level
-//                        ),
-//                        visibility = body.visibility,
-//                        wind = Wind(
-//                            speed = body.wind.speed,
-//                            deg = body.wind.deg,
-//                            gust = body.wind.gust
-//                        ),
-//                        clouds = Clouds(
-//                            all = body.clouds.all
-//                        ),
-//                        dt = body.dt,
-//                        sys = Sys(
-//                            type = body.sys.type,
-//                            id = body.sys.id,
-//                            country = body.sys.country,
-//                            sunrise = body.sys.sunrise,
-//                            sunset = body.sys.sunset
-//                        ),
-//                        timezone = body.timezone,
-//                        id = body.id,
-//                        name = body.name,
-//                        cod = body.cod
-//                    )
-                    Log.d("CHECK", "data - $weatherData")
-                    weatherResponseDao.insertWeatherResponse(weatherData)
-                    Result.Success(weatherData)
+                    Log.d("CHECK", "data - $data")
+                    weatherResponseDao.insertWeatherResponse(data)
+                    Result.Success(data)
                 } else {
                     Log.d(
                         "CHECK",

@@ -1,4 +1,6 @@
 package com.example.amiweatherapp.data.utils
 
-import com.example.amiweatherapp.data.local.model.WeatherResponse
-
+sealed class Result<out T> {
+    data class Success<out T>(val data: T) : Result<T>()
+    data class Error(val error: WeatherError) : Result<Nothing>()
+}

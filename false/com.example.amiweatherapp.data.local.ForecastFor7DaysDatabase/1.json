@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cee8670ce96d1317085e6b2cef1ca399",
+    "identityHash": "0da9e6643933b5edbdffaa268640c848",
     "entities": [
       {
-        "tableName": "weather_resp",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `location` TEXT NOT NULL, `current` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "tableName": "forecast_for_7_days",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `location` TEXT NOT NULL, `current` TEXT NOT NULL, `forecast` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -25,6 +25,12 @@
             "columnName": "current",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "forecast",
+            "columnName": "forecast",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -40,7 +46,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cee8670ce96d1317085e6b2cef1ca399')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0da9e6643933b5edbdffaa268640c848')"
     ]
   }
 }
