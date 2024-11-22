@@ -61,6 +61,7 @@ class FetchForecastFor7DaysUseCase @Inject constructor(
                 val body = response.body()
                 if (body != null) {
                     val data = ForecastFor7DaysResponse(
+
                         location = Location(
                             name = body.location.name,
                             region = body.location.region,
@@ -68,28 +69,37 @@ class FetchForecastFor7DaysUseCase @Inject constructor(
                             lat = body.location.lat,
                             lon = body.location.lon
                         ),
+
                         current = CurrentWeather(
                             condition = WeatherCondition(
                                 text = body.current.condition.text,
                                 icon = body.current.condition.icon
                             ),
-                            temperatureC = body.current.temperatureC,
-                            temperatureF = body.current.temperatureF,
-                            feelsLikeC = body.current.feelsLikeC,
-                            feelsLikeF = body.current.feelsLikeF,
-                            windKph = body.current.windKph,
-                            windMph = body.current.windMph,
-                            windDirection = body.current.windDirection,
+                            temp_c = body.current.temp_c,
+                            temp_f = body.current.temp_f,
+                            feelslike_c = body.current.feelslike_c,
+                            feelslike_f = body.current.feelslike_f,
+                            wind_mph = body.current.wind_mph,
+                            wind_kph = body.current.wind_kph,
+                            wind_degree = body.current.wind_degree,
+                            wind_dir = body.current.wind_dir,
                             humidity = body.current.humidity,
-                            gustKph = body.current.gustKph,
-                            gustMph = body.current.gustMph
+                            gust_mph = body.current.gust_mph,
+                            gust_kph = body.current.gust_kph,
+                            uv = body.current.uv,
+                            pressure_mb = body.current.pressure_mb,
+                            pressure_in = body.current.pressure_in
                         ),
+
                         forecast = Forecast(
                             forecastday = body.forecast.forecastday.map { forecastDay ->
                                 ForecastDay(
                                     date = forecastDay.date,
-                                    date_epoch = forecastDay.date_epoch,
                                     day = Day(
+                                        condition = WeatherCondition(
+                                            text = forecastDay.day.condition.text,
+                                            icon = forecastDay.day.condition.icon
+                                        ),
                                         maxtemp_c = forecastDay.day.maxtemp_c,
                                         maxtemp_f = forecastDay.day.maxtemp_f,
                                         mintemp_c = forecastDay.day.mintemp_c,
@@ -98,43 +108,19 @@ class FetchForecastFor7DaysUseCase @Inject constructor(
                                         maxwind_kph = forecastDay.day.maxwind_kph,
                                         totalprecip_mm = forecastDay.day.totalprecip_mm,
                                         totalprecip_in = forecastDay.day.totalprecip_in,
-                                        avghumidity = forecastDay.day.avghumidity,
-                                        condition = WeatherCondition(
-                                            text = forecastDay.day.condition.text,
-                                            icon = forecastDay.day.condition.icon
-                                        ),
-                                        daily_will_it_rain = forecastDay.day.daily_will_it_rain,
-                                        daily_will_it_snow = forecastDay.day.daily_will_it_snow,
-                                        daily_chance_of_rain = forecastDay.day.daily_chance_of_rain,
-                                        daily_chance_of_snow = forecastDay.day.daily_chance_of_snow
+                                        avghumidity = forecastDay.day.avghumidity
                                     ),
                                     hour = forecastDay.hour.map { hourResponse ->
                                         Hour(
-                                            time_epoch = hourResponse.time_epoch,
-                                            time = hourResponse.time,
-                                            temp_c = hourResponse.temp_c,
-                                            temp_f = hourResponse.temp_f,
                                             condition = WeatherCondition(
                                                 text = hourResponse.condition.text,
                                                 icon = hourResponse.condition.icon
                                             ),
-                                            wind_mph = hourResponse.wind_mph,
-                                            wind_kph = hourResponse.wind_kph,
-                                            wind_dir = hourResponse.wind_dir,
-                                            pressure_mb = hourResponse.pressure_mb,
-                                            precip_mm = hourResponse.precip_mm,
-                                            snow_cm = hourResponse.snow_cm,
-                                            humidity = hourResponse.humidity,
-                                            feelslike_c = hourResponse.feelslike_c,
-                                            feelslike_f = hourResponse.feelslike_f,
-                                            dewpoint_c = hourResponse.dewpoint_c,
-                                            dewpoint_f = hourResponse.dewpoint_f,
-                                            will_it_rain = hourResponse.will_it_rain,
-                                            will_it_snow = hourResponse.will_it_snow,
-                                            chance_of_rain = hourResponse.chance_of_rain,
-                                            chance_of_snow = hourResponse.chance_of_snow,
-                                            gust_mph = hourResponse.gust_mph,
-                                            gust_kph = hourResponse.gust_kph
+                                            time = hourResponse.time,
+                                            temp_c = hourResponse.temp_c,
+                                            temp_f = hourResponse.temp_f,
+                                            vis_km = hourResponse.vis_km,
+                                            vis_miles = hourResponse.vis_miles
                                         )
                                     }
                                 )

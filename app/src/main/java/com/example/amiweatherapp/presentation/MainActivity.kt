@@ -72,12 +72,6 @@ class MainActivity : ComponentActivity() {
             object : com.google.android.gms.location.LocationCallback() {
                 override fun onLocationResult(locationResult: com.google.android.gms.location.LocationResult) {
                     locationResult.lastLocation?.let { location ->
-//                        homeViewModel.viewModelScope.launch {
-//                            homeViewModel.fetchWeather(
-//                                lat = location.latitude.toString(),
-//                                lon = location.longitude.toString()
-//                            )
-//                        }
                         homeViewModel.viewModelScope.launch {
                             homeViewModel.fetchForecast(
                                 lat = location.latitude.toString(),
