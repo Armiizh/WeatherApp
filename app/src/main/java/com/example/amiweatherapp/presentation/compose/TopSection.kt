@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -17,10 +19,12 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.example.amiweatherapp.data.local.model.WeatherResponse
 import com.example.amiweatherapp.data.utils.Result
+import com.example.amiweatherapp.presentation.HomeViewModel
 import kotlin.math.roundToInt
 
 @Composable
 fun TopSection(
+    viewModel: HomeViewModel,
     result: Result.Success<WeatherResponse>,
     ctx: Context
 ) {
@@ -32,13 +36,13 @@ fun TopSection(
         text = "${result.data.location.lat}, ${result.data.location.lon}",
         fontSize = 12.sp
     )
+    val isTempInFahrenheit by viewModel.isTempInFahrenheit.collectAsState()
     Row(
         Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        val iconUrl =
-            result.data.current.condition.icon
+        val iconUrl = result.data.current.condition.icon
         AsyncImage(
             modifier = Modifier.size(80.dp),
             model = ImageRequest.Builder(ctx)
@@ -47,14 +51,23 @@ fun TopSection(
                 .build(),
             contentDescription = null
         )
+
         Text(
-            text = "${result.data.current.temp_c.roundToInt()}°",
+            text = if (isTempInFahrenheit) {
+                "${result.data.current.temp_f.roundToInt()}°"
+            } else {
+                "${result.data.current.temp_c.roundToInt()}°"
+            },
             fontWeight = FontWeight.Bold,
             fontSize = 64.sp
         )
     }
     Text(
-        text = "Ощущается как ${result.data.current.feelslike_c.roundToInt()}°",
+        text = if (isTempInFahrenheit) {
+            "Ощущается как ${result.data.current.feelslike_f.roundToInt()}°"
+        } else {
+            "Ощущается как ${result.data.current.feelslike_c.roundToInt()}°"
+        },
         fontSize = 12.sp
     )
 }

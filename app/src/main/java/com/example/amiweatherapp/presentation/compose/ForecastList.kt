@@ -16,6 +16,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,14 +33,17 @@ import com.example.amiweatherapp.R
 import com.example.amiweatherapp.data.local.model.ForecastDay
 import com.example.amiweatherapp.data.local.model.WeatherResponse
 import com.example.amiweatherapp.data.utils.Result
+import com.example.amiweatherapp.presentation.HomeViewModel
 import kotlin.math.roundToInt
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ForecastList(
+    viewModel: HomeViewModel,
     result: Result.Success<WeatherResponse>,
     ctx: Context
 ) {
+    val isTempInFahrenheit by viewModel.isTempInFahrenheit.collectAsState()
     Column(
         Modifier
             .fillMaxWidth()
@@ -48,7 +53,7 @@ fun ForecastList(
     ) {
         ForecastFor7DaysTitle()
         for (forecastDay in result.data.forecast.forecastday) {
-            ForecastItem(forecastDay, result, ctx)
+            ForecastItem(isTempInFahrenheit, forecastDay, result, ctx)
         }
     }
 }
@@ -88,6 +93,7 @@ private fun ForecastFor7DaysTitle() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun ForecastItem(
+    isTempInFahrenheit: Boolean,
     forecastDay: ForecastDay,
     result: Result.Success<WeatherResponse>,
     ctx: Context
@@ -111,8 +117,7 @@ private fun ForecastItem(
                 )
                 AsyncImage(
                     modifier = Modifier
-                        .size(48.dp)
-                        ,
+                        .size(48.dp),
                     model = ImageRequest.Builder(ctx)
                         .data("https:${forecastDay.day.condition.icon}")
                         .size(Size.ORIGINAL)
@@ -131,7 +136,11 @@ private fun ForecastItem(
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text = "${forecastDay.day.mintemp_c.roundToInt()}°",
+                        text = if (isTempInFahrenheit) {
+                            "${forecastDay.day.mintemp_f.roundToInt()}°"
+                        } else {
+                            "${forecastDay.day.mintemp_c.roundToInt()}°"
+                        },
                         maxLines = 1
                     )
                 }
@@ -144,7 +153,13 @@ private fun ForecastItem(
                     modifier = Modifier.weight(.3f),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(text = "${forecastDay.day.maxtemp_c.roundToInt()}°", maxLines = 1)
+                    Text(
+                        text = if (isTempInFahrenheit) {
+                            "${forecastDay.day.maxtemp_f.roundToInt()}°"
+                        } else {
+                            "${forecastDay.day.maxtemp_c.roundToInt()}°"
+                        }, maxLines = 1
+                    )
                 }
             }
         }

@@ -13,15 +13,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.amiweatherapp.R
 import com.example.amiweatherapp.data.utils.Result
 import com.example.amiweatherapp.presentation.HomeViewModel
 import com.example.amiweatherapp.presentation.compose.CurrentWeatherInfo
@@ -29,22 +34,38 @@ import com.example.amiweatherapp.presentation.compose.ForecastList
 import com.example.amiweatherapp.presentation.compose.HourlyForecast
 import com.example.amiweatherapp.presentation.compose.LoadingDataContent
 import com.example.amiweatherapp.presentation.compose.TopSection
-import com.example.amiweatherapp.presentation.screen.SearchCity
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainContent(
-    homeViewModel: HomeViewModel,
+    viewModel: HomeViewModel,
     paddingValues: PaddingValues,
     isTextFieldVisible: Boolean,
-    changeVisible: () -> Unit
+    showBottomSheet: Boolean,
+    changeVisible: () -> Unit,
+    hideBottomSheet: () -> Unit
 ) {
-    val forecastFor7DaysData by homeViewModel.weatherData.collectAsState()
-    val forecastFor7DaysIsLoading by homeViewModel.dataIsLoading.collectAsState()
 
-    if (forecastFor7DaysIsLoading) {
+    val dataIsLoading by viewModel.dataIsLoading.collectAsState()
+
+    if (dataIsLoading) {
         LoadingDataContent()
     } else {
+
+        if (showBottomSheet) {
+            val sheetState = rememberModalBottomSheetState()
+            ModalBottomSheet(
+                onDismissRequest = {
+                    hideBottomSheet()
+                },
+                sheetState = sheetState,
+                containerColor = colorResource(id = R.color.lightBlue)
+            ) {
+                BottomSheetContent(viewModel) { hideBottomSheet() }
+            }
+        }
+
 
         Column(
             Modifier
@@ -53,10 +74,13 @@ fun MainContent(
             Arrangement.Center,
             Alignment.CenterHorizontally
         ) {
-            if (!isTextFieldVisible) {
+            if (isTextFieldVisible) {
+                SearchContent(viewModel) { changeVisible() }
+            } else {
                 val ctx = LocalContext.current
+                val weatherData by viewModel.weatherData.collectAsState()
 
-                when (val result = forecastFor7DaysData) {
+                when (val result = weatherData) {
                     is Result.Success -> {
                         Text(
                             text = result.data.location.name,
@@ -68,13 +92,13 @@ fun MainContent(
                                 .verticalScroll(rememberScrollState()),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            TopSection(result, ctx)
+                            TopSection(viewModel, result, ctx)
                             Spacer(Modifier.height(48.dp))
-                            HourlyForecast(result, ctx)
+                            HourlyForecast(viewModel, result, ctx)
                             Spacer(Modifier.height(8.dp))
-                            ForecastList(result, ctx)
+                            ForecastList(viewModel, result, ctx)
                             Spacer(Modifier.height(8.dp))
-                            CurrentWeatherInfo(result)
+                            CurrentWeatherInfo(viewModel, result)
                         }
                     }
 
@@ -92,8 +116,6 @@ fun MainContent(
                         Text(text = "Введите город и нажмите 'Найти'")
                     }
                 }
-            } else {
-                SearchCity(homeViewModel) { changeVisible() }
             }
         }
     }

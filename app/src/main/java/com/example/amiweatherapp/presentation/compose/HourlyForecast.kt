@@ -15,6 +15,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +29,7 @@ import coil.size.Size
 import com.example.amiweatherapp.data.local.model.WeatherResponse
 import com.example.amiweatherapp.data.local.model.Hour
 import com.example.amiweatherapp.data.utils.Result
+import com.example.amiweatherapp.presentation.HomeViewModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -34,15 +37,26 @@ import kotlin.math.roundToInt
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HourlyForecast(result: Result.Success<WeatherResponse>, ctx: Context) {
+fun HourlyForecast(
+    viewModel: HomeViewModel,
+    result: Result.Success<WeatherResponse>,
+    ctx: Context
+) {
 
     val currentDateTime = LocalDateTime.now()
     val currentHour = currentDateTime.format(DateTimeFormatter.ofPattern("HH"))
     val currentDate = LocalDate.now()
-    val todayForecast = result.data.forecast.forecastday.find { it.date == currentDate.format(
-        DateTimeFormatter.ofPattern("yyyy-MM-dd")) }
-    val tomorrowForecast = result.data.forecast.forecastday.find { it.date == currentDate.plusDays(1).format(
-        DateTimeFormatter.ofPattern("yyyy-MM-dd")) }
+    val todayForecast = result.data.forecast.forecastday.find {
+        it.date == currentDate.format(
+            DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        )
+    }
+    val tomorrowForecast = result.data.forecast.forecastday.find {
+        it.date == currentDate.plusDays(1).format(
+            DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        )
+    }
+    val isTempInFahrenheit by viewModel.isTempInFahrenheit.collectAsState()
 
     Column(
         Modifier
@@ -81,7 +95,7 @@ fun HourlyForecast(result: Result.Success<WeatherResponse>, ctx: Context) {
 
             if (hourlyForecasts.isNotEmpty()) {
                 for (hour in hourlyForecasts) {
-                    HourlyForecastItem(hour, ctx)
+                    HourlyForecastItem(isTempInFahrenheit, hour, ctx)
                 }
             } else {
                 Text("Нет доступных данных для оставшегося времени")
@@ -91,7 +105,7 @@ fun HourlyForecast(result: Result.Success<WeatherResponse>, ctx: Context) {
 }
 
 @Composable
-fun HourlyForecastItem(hour: Hour, ctx: Context) {
+fun HourlyForecastItem(isTempInFahrenheit: Boolean, hour: Hour, ctx: Context) {
     Column(
 
         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
@@ -108,6 +122,12 @@ fun HourlyForecastItem(hour: Hour, ctx: Context) {
                 .build(),
             contentDescription = null
         )
-        Text("${hour.temp_c.roundToInt()}°")
+        Text(
+            text = if (isTempInFahrenheit) {
+                "${hour.temp_f.roundToInt()}°"
+            } else {
+                "${hour.temp_c.roundToInt()}°"
+            }
+        )
     }
 }

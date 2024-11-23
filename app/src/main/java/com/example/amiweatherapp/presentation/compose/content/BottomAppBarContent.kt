@@ -21,12 +21,16 @@ import com.example.amiweatherapp.presentation.HomeViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun BottomAppBarContent(homeViewModel: HomeViewModel) {
+fun BottomAppBarContent(homeViewModel: HomeViewModel, onBottomSheetOpen: () -> Unit) {
     BottomAppBar(
         modifier = Modifier.height(64.dp),
         containerColor = Color.Transparent,
         content = {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
                 IconButton(onClick = {
                     homeViewModel.viewModelScope.launch {
                         homeViewModel.fetchForecast()
@@ -37,7 +41,7 @@ fun BottomAppBarContent(homeViewModel: HomeViewModel) {
                         contentDescription = "Navigation icon"
                     )
                 }
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { onBottomSheetOpen() }) {
                     Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
                 }
             }

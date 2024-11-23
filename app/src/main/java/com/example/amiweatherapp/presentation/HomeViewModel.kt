@@ -24,9 +24,11 @@ class HomeViewModel @Inject constructor(
     private val _dataIsLoading = MutableStateFlow(true)
     val dataIsLoading: StateFlow<Boolean> = _dataIsLoading
 
+    //Долгота и широта по геолокации
     private var _lat: String? = null
     private var _lon: String? = null
 
+    //Методы для изменения геолокации
     fun setCoordinates(lat: String?, lon: String?) {
         _lat = lat
         _lon = lon
@@ -34,6 +36,33 @@ class HomeViewModel @Inject constructor(
 
     private fun getCoordinates(): Pair<String?, String?> {
         return _lat to _lon
+    }
+
+    //Состояния для переключателей
+    private val _isSpeedInMph = MutableStateFlow(false)
+    val isSpeedInMph: StateFlow<Boolean> get() = _isSpeedInMph
+    private val _isTempInFahrenheit = MutableStateFlow(false)
+    val isTempInFahrenheit: StateFlow<Boolean> get() = _isTempInFahrenheit
+    private val _isVisibilityInMiles = MutableStateFlow(false)
+    val isVisibilityInMiles: StateFlow<Boolean> get() = _isVisibilityInMiles
+    private val _isPressureInInch = MutableStateFlow(false)
+    val isPressureInInch: StateFlow<Boolean> get() = _isPressureInInch
+
+    //Методы для изменения состояний
+    fun setSpeedInMph(value: Boolean) {
+        _isSpeedInMph.value = value
+    }
+
+    fun setTempInFahrenheit(value: Boolean) {
+        _isTempInFahrenheit.value = value
+    }
+
+    fun setVisibilityInMiles(value: Boolean) {
+        _isVisibilityInMiles.value = value
+    }
+
+    fun setPressureInInch(value: Boolean) {
+        _isPressureInInch.value = value
     }
 
     suspend fun fetchForecast(city: String? = null) {
