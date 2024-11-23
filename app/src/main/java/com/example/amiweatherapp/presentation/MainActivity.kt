@@ -73,11 +73,19 @@ class MainActivity : ComponentActivity() {
                 override fun onLocationResult(locationResult: com.google.android.gms.location.LocationResult) {
                     locationResult.lastLocation?.let { location ->
                         homeViewModel.viewModelScope.launch {
-                            homeViewModel.fetchForecast(
-                                lat = location.latitude.toString(),
-                                lon = location.longitude.toString()
+                            homeViewModel.setCoordinates(
+                                location.latitude.toString(),
+                                location.longitude.toString()
                             )
+                            homeViewModel.fetchForecast()
                         }
+
+//                        homeViewModel.viewModelScope.launch {
+//                            homeViewModel.fetchForecast(
+//                                lat = location.latitude.toString(),
+//                                lon = location.longitude.toString()
+//                            )
+//                        }
                         fusedLocationClient.removeLocationUpdates(this)
                     } ?: run {
                         Toast.makeText(

@@ -4,8 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "forecast_for_7_days")
-data class ForecastFor7DaysResponse(
+@Entity(tableName = "weather_response")
+data class WeatherResponse(
 
     @PrimaryKey val id: Int = 0,
     @SerializedName("location") val location: Location,      //Геолокация

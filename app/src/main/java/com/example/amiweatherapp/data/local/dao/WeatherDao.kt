@@ -4,20 +4,20 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.amiweatherapp.data.local.model.ForecastFor7DaysResponse
+import com.example.amiweatherapp.data.local.model.WeatherResponse
 
 @Dao
-interface ForecastFor7DaysDao {
+interface WeatherDao {
 
     // Метод для вставки данных о прогнозе погоды
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWeatherResponse(forecastFor7DaysResponse: ForecastFor7DaysResponse)
+    suspend fun insertWeatherResponse(weatherResponse: WeatherResponse)
 
     // Метод для получения всех данных о прогнозе погоды
-    @Query("SELECT * FROM forecast_for_7_days")
-    suspend fun getAllWeatherResponses(): List<ForecastFor7DaysResponse>
+    @Query("SELECT * FROM weather_response")
+    suspend fun getAllWeatherResponses(): List<WeatherResponse>
 
     // Метод для удаления всех данных о прогнозе погоды (если это необходимо)
-    @Query("DELETE FROM forecast_for_7_days")
+    @Query("DELETE FROM weather_response")
     suspend fun deleteAllWeatherResponses()
 }

@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Size
-import com.example.amiweatherapp.data.local.model.ForecastFor7DaysResponse
+import com.example.amiweatherapp.data.local.model.WeatherResponse
 import com.example.amiweatherapp.data.utils.Result
 import kotlin.math.roundToInt
 
 @Composable
 fun TopSection(
-    result: Result.Success<ForecastFor7DaysResponse>,
+    result: Result.Success<WeatherResponse>,
     ctx: Context
 ) {
     Text(

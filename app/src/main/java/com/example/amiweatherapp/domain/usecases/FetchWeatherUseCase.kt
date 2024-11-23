@@ -1,12 +1,12 @@
 package com.example.amiweatherapp.domain.usecases
 
 import android.util.Log
-import com.example.amiweatherapp.data.local.ForecastFor7DaysDatabase
+import com.example.amiweatherapp.data.local.WeatherDatabase
 import com.example.amiweatherapp.data.local.model.CurrentWeather
 import com.example.amiweatherapp.data.local.model.Day
 import com.example.amiweatherapp.data.local.model.Forecast
 import com.example.amiweatherapp.data.local.model.ForecastDay
-import com.example.amiweatherapp.data.local.model.ForecastFor7DaysResponse
+import com.example.amiweatherapp.data.local.model.WeatherResponse
 import com.example.amiweatherapp.data.local.model.Hour
 import com.example.amiweatherapp.data.local.model.Location
 import com.example.amiweatherapp.data.local.model.WeatherCondition
@@ -15,22 +15,22 @@ import com.example.amiweatherapp.data.utils.Result
 import com.example.amiweatherapp.data.utils.WeatherError
 import javax.inject.Inject
 
-class FetchForecastFor7DaysUseCase @Inject constructor(
+class FetchWeatherUseCase @Inject constructor(
     private val service: Service,
-    private val database: ForecastFor7DaysDatabase
+    private val database: WeatherDatabase
 ) {
     suspend fun invoke(
         city: String? = null,
         lat: String? = null,
         lon: String? = null
-    ): Result<ForecastFor7DaysResponse> {
+    ): Result<WeatherResponse> {
         return try {
             val response = if (city != null) {
                 Log.d(
                     "CHECK",
                     "city = $city"
                 )
-                service.forecast7Days(
+                service.fetchWeather(
                     "e098f2674efa47a28e2171146241511",
                     city,
                     "8",
@@ -43,7 +43,7 @@ class FetchForecastFor7DaysUseCase @Inject constructor(
                     "CHECK",
                     "lat = $lat, lon = $lon"
                 )
-                service.forecast7Days(
+                service.fetchWeather(
                     "e098f2674efa47a28e2171146241511",
                     q,
                     "8",
@@ -60,7 +60,7 @@ class FetchForecastFor7DaysUseCase @Inject constructor(
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
-                    val data = ForecastFor7DaysResponse(
+                    val data = WeatherResponse(
 
                         location = Location(
                             name = body.location.name,
@@ -128,7 +128,7 @@ class FetchForecastFor7DaysUseCase @Inject constructor(
                         )
                     )
                     Log.d("CHECK", "data - $data")
-                    database.forecastFor7DaysDao().insertWeatherResponse(data)
+                    database.dao().insertWeatherResponse(data)
                     Result.Success(data)
                 } else {
                     Log.d(

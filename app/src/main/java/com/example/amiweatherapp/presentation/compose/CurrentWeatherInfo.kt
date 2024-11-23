@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.amiweatherapp.R
-import com.example.amiweatherapp.data.local.model.ForecastFor7DaysResponse
+import com.example.amiweatherapp.data.local.model.WeatherResponse
 import com.example.amiweatherapp.data.utils.Result
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -30,7 +30,7 @@ import kotlin.math.roundToInt
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CurrentWeatherInfo(result: Result.Success<ForecastFor7DaysResponse>) {
+fun CurrentWeatherInfo(result: Result.Success<WeatherResponse>) {
 
     val currentDateTime = LocalDateTime.now()
     val currentHour = currentDateTime.format(DateTimeFormatter.ofPattern("HH"))
@@ -86,9 +86,7 @@ fun CurrentWeatherInfo(result: Result.Success<ForecastFor7DaysResponse>) {
         ) {
             //Третий виджет
             AmiWeatherWidget(
-                Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
+                Modifier.weight(1f)
             ) {
                 WidgetTitle(title = "ВЕТЕР", iconId = R.drawable.ic_wind)
                 Column(Modifier.padding(horizontal = 16.dp)) {

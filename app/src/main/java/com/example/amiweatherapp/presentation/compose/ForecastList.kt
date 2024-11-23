@@ -29,14 +29,14 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.example.amiweatherapp.R
 import com.example.amiweatherapp.data.local.model.ForecastDay
-import com.example.amiweatherapp.data.local.model.ForecastFor7DaysResponse
+import com.example.amiweatherapp.data.local.model.WeatherResponse
 import com.example.amiweatherapp.data.utils.Result
 import kotlin.math.roundToInt
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ForecastList(
-    result: Result.Success<ForecastFor7DaysResponse>,
+    result: Result.Success<WeatherResponse>,
     ctx: Context
 ) {
     Column(
@@ -89,7 +89,7 @@ private fun ForecastFor7DaysTitle() {
 @Composable
 private fun ForecastItem(
     forecastDay: ForecastDay,
-    result: Result.Success<ForecastFor7DaysResponse>,
+    result: Result.Success<WeatherResponse>,
     ctx: Context
 ) {
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
