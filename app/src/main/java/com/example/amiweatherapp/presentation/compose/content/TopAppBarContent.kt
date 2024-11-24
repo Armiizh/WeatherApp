@@ -85,7 +85,7 @@ fun TopAppBarContent(viewModel: HomeViewModel) {
                                 viewModel.fetchForecast(city)
                             }
                         } else {
-                            Toast.makeText(ctx, "Пол не может быть пустым", Toast.LENGTH_SHORT)
+                            Toast.makeText(ctx, "Поле ввода не может быть пустым", Toast.LENGTH_SHORT)
                                 .show()
                         }
                     }
