@@ -25,8 +25,6 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
 ) {
-
-    var isTextFieldVisible by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     val dataIsLoading by viewModel.dataIsLoading.collectAsState()
@@ -43,19 +41,14 @@ fun HomeScreen(
         Scaffold(
             containerColor = Color.Transparent,
             topBar = {
-                TopAppBarContent(isTextFieldVisible) { isTextFieldVisible = !isTextFieldVisible }
+                TopAppBarContent(viewModel)
             },
             content = { paddingValues ->
                 MainContent(
                     viewModel,
                     paddingValues,
-                    isTextFieldVisible,
-                    showBottomSheet,
-                    changeVisible = {
-                        isTextFieldVisible = !isTextFieldVisible
-                    },
-                    hideBottomSheet = { showBottomSheet = false }
-                )
+                    showBottomSheet
+                ) { showBottomSheet = false }
             },
             bottomBar = {
                 BottomAppBarContent(viewModel) {

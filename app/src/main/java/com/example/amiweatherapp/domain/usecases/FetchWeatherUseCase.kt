@@ -1,6 +1,5 @@
 package com.example.amiweatherapp.domain.usecases
 
-import android.util.Log
 import com.example.amiweatherapp.BuildConfig
 import com.example.amiweatherapp.data.local.WeatherDatabase
 import com.example.amiweatherapp.data.local.model.CurrentWeather
@@ -32,14 +31,11 @@ class FetchWeatherUseCase @Inject constructor(
         val aqi = "no"
         val lang = "ru"
         val q = "$lat,$lon"
-        Log.d("CHECK", "apikey - $apiKey")
         return try {
             val response = if (city != null) {
                 service.fetchWeather(apiKey, city, days, aqi, lang)
-            } else if (lat != null && lon != null) {
+            } else  {
                 service.fetchWeather(apiKey, q, days, aqi, lang)
-            } else {
-                throw IllegalArgumentException("Either city name or location coordinates must be provided.")
             }
             if (response.isSuccessful) {
                 val body = response.body()
@@ -118,29 +114,15 @@ class FetchWeatherUseCase @Inject constructor(
                         )
                     )
                     code(data.current.condition.code)
-                    Log.d("CHECK", "data - $data")
                     database.dao().insertWeatherResponse(data)
                     Result.Success(data)
                 } else {
-                    Log.d(
-                        "CHECK",
-                        "Ответ от сервера пустой"
-                    )
                     Result.Error(WeatherError.DataNotFound)
                 }
             } else {
-                Log.d("CHECK", "response errorBody - ${response.errorBody()}")
-                Log.d(
-                    "CHECK",
-                    "Что то не так с ответом от сервера место: FetchForecastFor7DaysUseCase.invoke.!isSuccesful.NETWORK"
-                )
                 Result.Error(WeatherError.NetworkError)
             }
         } catch (e: Exception) {
-            Log.d(
-                "CHECK",
-                "Что то не так с ответом от сервера место: FetchForecastFor7DaysUseCase.invoke.!isSuccesful.Excpection - ${e.stackTrace}\n${e.message}\n"
-            )
             Result.Error(WeatherError.UnknownError(e.message ?: "Неизвестная ошибка"))
         }
     }

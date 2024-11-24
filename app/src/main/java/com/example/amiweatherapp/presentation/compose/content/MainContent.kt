@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import com.example.amiweatherapp.data.utils.Result
+import com.example.amiweatherapp.data.utils.getErrorMessage
 import com.example.amiweatherapp.presentation.HomeViewModel
 import com.example.amiweatherapp.presentation.compose.CurrentWeatherInfo
 import com.example.amiweatherapp.presentation.compose.ForecastList
@@ -47,9 +48,7 @@ import java.time.format.DateTimeFormatter
 fun MainContent(
     viewModel: HomeViewModel,
     paddingValues: PaddingValues,
-    isTextFieldVisible: Boolean,
     showBottomSheet: Boolean,
-    changeVisible: () -> Unit,
     hideBottomSheet: () -> Unit
 ) {
 
@@ -71,7 +70,6 @@ fun MainContent(
             BottomSheetContent(viewModel) { hideBottomSheet() }
         }
     }
-
     Column(
         Modifier
             .padding(paddingValues)
@@ -79,68 +77,65 @@ fun MainContent(
         Arrangement.Center,
         Alignment.CenterHorizontally
     ) {
-        if (isTextFieldVisible) {
-            SearchContent(viewModel) { changeVisible() }
-        } else {
-            val ctx = LocalContext.current
-            val weatherData by viewModel.weatherData.collectAsState()
 
-            when (val result = weatherData) {
-                is Result.Success -> {
+        val ctx = LocalContext.current
+        val weatherData by viewModel.weatherData.collectAsState()
 
-                    val currentHour = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH"))
-                    val todayForecast = result.data.forecast.forecastday.firstOrNull { it.date == LocalDateTime.now().toLocalDate().toString() }
-                    val currentHourData = todayForecast?.hour?.find { hour -> hour.time.split(" ")[1].substring(0, 2) == currentHour }
-                    val current = result.data.current
-                    isDay = currentHourData?.is_day ?: current.is_day
+        when (val result = weatherData) {
+            is Result.Success -> {
 
-                    Text(
-                        text = result.data.location.name,
-                        fontSize = 36.sp,
-                        color = Color.White
-                    )
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .verticalScroll(rememberScrollState()),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        TopSection(viewModel, result, ctx)
-                        Spacer(Modifier.height(48.dp))
-                        HourlyForecast(viewModel, result, ctx)
-                        Spacer(Modifier.height(8.dp))
-                        ForecastList(viewModel, result, ctx)
-                        Spacer(Modifier.height(8.dp))
-                        CurrentWeatherInfo(viewModel, result)
-                    }
+                val currentHour = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH"))
+                val todayForecast = result.data.forecast.forecastday.firstOrNull {
+                    it.date == LocalDateTime.now().toLocalDate().toString()
                 }
+                val currentHourData = todayForecast?.hour?.find { hour ->
+                    hour.time.split(" ")[1].substring(0, 2) == currentHour
+                }
+                val current = result.data.current
+                isDay = currentHourData?.is_day ?: current.is_day
 
-                is Result.Error -> {
+                Text(
+                    text = result.data.location.name,
+                    fontSize = 36.sp,
+                    color = Color.White
+                )
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    TopSection(viewModel, result, ctx)
+                    Spacer(Modifier.height(48.dp))
+                    HourlyForecast(viewModel, result, ctx)
+                    Spacer(Modifier.height(8.dp))
+                    ForecastList(viewModel, result, ctx)
+                    Spacer(Modifier.height(8.dp))
+                    CurrentWeatherInfo(viewModel, result)
+                }
+            }
 
-                    Column(
-                        Modifier.fillMaxSize(),
-                        Arrangement.Center,
-                        Alignment.CenterHorizontally
-                    ) {
-                        Text(text = "Ошибка:${result.error}")
-                        Button(onClick = {
-                            viewModel.viewModelScope.launch {
-                                viewModel.fetchForecast()
-                            }
-                        }) {
-                            Text(text = "Попробовать еще раз")
+            is Result.Error -> {
+                val errorMessage = getErrorMessage(result.error)
+                Column(
+                    Modifier.fillMaxSize(),
+                    Arrangement.Center,
+                    Alignment.CenterHorizontally
+                ) {
+                    Text(text = errorMessage)
+                    Button(onClick = {
+                        viewModel.viewModelScope.launch {
+                            viewModel.fetchForecast()
                         }
+                    }) {
+                        Text(text = "Попробовать еще раз")
                     }
-                    Toast.makeText(
-                        ctx,
-                        "Ошибка: ${result.error}",
-                        Toast.LENGTH_LONG
-                    ).show()
                 }
+                Toast.makeText(ctx, errorMessage, Toast.LENGTH_SHORT).show()
+            }
 
-                null -> {
-                    Text(text = "Что-то пошло не так :(")
-                }
+            null -> {
+                Text(text = "Что-то пошло не так :(")
             }
         }
     }
