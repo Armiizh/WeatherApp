@@ -16,6 +16,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,16 +31,19 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.example.amiweatherapp.R
 import com.example.amiweatherapp.data.local.model.ForecastDay
-import com.example.amiweatherapp.data.local.model.ForecastFor7DaysResponse
+import com.example.amiweatherapp.data.local.model.WeatherResponse
 import com.example.amiweatherapp.data.utils.Result
+import com.example.amiweatherapp.presentation.HomeViewModel
 import kotlin.math.roundToInt
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ForecastList(
-    result: Result.Success<ForecastFor7DaysResponse>,
+    viewModel: HomeViewModel,
+    result: Result.Success<WeatherResponse>,
     ctx: Context
 ) {
+    val isTempInFahrenheit by viewModel.isTempInFahrenheit.collectAsState()
     Column(
         Modifier
             .fillMaxWidth()
@@ -48,7 +53,7 @@ fun ForecastList(
     ) {
         ForecastFor7DaysTitle()
         for (forecastDay in result.data.forecast.forecastday) {
-            ForecastItem(forecastDay, result, ctx)
+            ForecastItem(isTempInFahrenheit, forecastDay, result, ctx)
         }
     }
 }
@@ -68,13 +73,13 @@ private fun ForecastFor7DaysTitle() {
                 modifier = Modifier.size(16.dp),
                 painter = painterResource(id = R.drawable.baseline_calendar_month_24),
                 contentDescription = null,
-                tint = Color.DarkGray
+                tint = Color.White
             )
             Text(
                 modifier = Modifier.padding(start = 8.dp),
                 text = "Прогноз на 7 дней",
                 fontSize = 12.sp,
-                color = Color.DarkGray
+                color = Color.White
             )
         }
         HorizontalDivider(
@@ -88,8 +93,9 @@ private fun ForecastFor7DaysTitle() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun ForecastItem(
+    isTempInFahrenheit: Boolean,
     forecastDay: ForecastDay,
-    result: Result.Success<ForecastFor7DaysResponse>,
+    result: Result.Success<WeatherResponse>,
     ctx: Context
 ) {
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -107,12 +113,12 @@ private fun ForecastItem(
                 Text(
                     text = dateDisplay(date = forecastDay.date),
                     maxLines = 1,
-                    textAlign = TextAlign.Start
+                    textAlign = TextAlign.Start,
+                    color = Color.White
                 )
                 AsyncImage(
                     modifier = Modifier
-                        .size(48.dp)
-                        ,
+                        .size(48.dp),
                     model = ImageRequest.Builder(ctx)
                         .data("https:${forecastDay.day.condition.icon}")
                         .size(Size.ORIGINAL)
@@ -131,8 +137,13 @@ private fun ForecastItem(
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text = "${forecastDay.day.mintemp_c.roundToInt()}°",
-                        maxLines = 1
+                        text = if (isTempInFahrenheit) {
+                            "${forecastDay.day.mintemp_f.roundToInt()}°"
+                        } else {
+                            "${forecastDay.day.mintemp_c.roundToInt()}°"
+                        },
+                        maxLines = 1,
+                        color = Color.White
                     )
                 }
                 TemperatureGradientBox(
@@ -144,7 +155,14 @@ private fun ForecastItem(
                     modifier = Modifier.weight(.3f),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(text = "${forecastDay.day.maxtemp_c.roundToInt()}°", maxLines = 1)
+                    Text(
+                        text = if (isTempInFahrenheit) {
+                            "${forecastDay.day.maxtemp_f.roundToInt()}°"
+                        } else {
+                            "${forecastDay.day.maxtemp_c.roundToInt()}°"
+                        }, maxLines = 1,
+                        color = Color.White
+                    )
                 }
             }
         }

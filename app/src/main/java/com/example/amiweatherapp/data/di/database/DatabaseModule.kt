@@ -2,8 +2,8 @@ package com.example.amiweatherapp.data.di.database
 
 import android.content.Context
 import androidx.room.Room
-import com.example.amiweatherapp.data.local.ForecastFor7DaysDatabase
-import com.example.amiweatherapp.data.local.dao.ForecastFor7DaysDao
+import com.example.amiweatherapp.data.local.WeatherDatabase
+import com.example.amiweatherapp.data.local.dao.WeatherDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,17 +15,17 @@ import dagger.hilt.components.SingletonComponent
 object DatabaseModule {
 
     @Provides
-    fun provideForecastFor7DaysDatabase(@ApplicationContext appContext: Context): ForecastFor7DaysDatabase {
+    fun provideForecastFor7DaysDatabase(@ApplicationContext appContext: Context): WeatherDatabase {
         return Room.databaseBuilder(
             appContext,
-            ForecastFor7DaysDatabase::class.java,
-            "forecast_for_7_days"
+            WeatherDatabase::class.java,
+            "weather_response"
         )
             .build()
     }
 
     @Provides
-    fun provideForecastFor7DaysDao(forecastFor7DaysDatabase: ForecastFor7DaysDatabase): ForecastFor7DaysDao {
-        return forecastFor7DaysDatabase.forecastFor7DaysDao()
+    fun provideForecastFor7DaysDao(database: WeatherDatabase): WeatherDao {
+        return database.dao()
     }
 }

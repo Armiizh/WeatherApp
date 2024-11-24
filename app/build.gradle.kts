@@ -3,16 +3,17 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
     namespace = "com.example.amiweatherapp"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.amiweatherapp"
         minSdk = 23
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -40,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -48,6 +50,12 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    secrets {
+        propertiesFileName = "secrets.properties"
+        defaultPropertiesFileName = "local.defaults.properties"
+        ignoreList.add("keyToIgnore")
+        ignoreList.add("sdk.*")
     }
 }
 
@@ -97,21 +105,12 @@ dependencies {
     implementation(libs.coil.compose)
 
     //Coroutines
-    implementation (libs.jetbrains.kotlinx.coroutines.core)
-    implementation (libs.kotlinx.coroutines.android)
+    implementation(libs.jetbrains.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 
     //Location
-    implementation (libs.accompanist.permissions)
-    implementation (libs.play.services.location)
-
-    //Pull to refresh
-    implementation ("androidx.compose.material:material:1.4.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
-    implementation ("androidx.compose.material3:material3:1.3.0")
-    implementation ("androidx.compose.material3:material3-window-size-class:1.3.0")
-    implementation ("androidx.compose.material3:material3-adaptive-navigation-suite:1.4.0-alpha01")
-
-
+    implementation(libs.accompanist.permissions)
+    implementation(libs.play.services.location)
 }
 kapt {
     correctErrorTypes = true
