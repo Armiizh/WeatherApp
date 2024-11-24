@@ -15,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +27,7 @@ fun BottomSheetContent(viewModel: HomeViewModel, onClose: () -> Unit) {
     val isSpeedInMph by viewModel.isSpeedInMph.collectAsState()
     val isTempInFahrenheit by viewModel.isTempInFahrenheit.collectAsState()
     val isVisibilityInMiles by viewModel.isVisibilityInMiles.collectAsState()
-    val isPressureInInch by viewModel.isVisibilityInMiles.collectAsState()
+    val isPressureInInch by viewModel.isPressureInInch.collectAsState()
 
     Column(
         modifier = Modifier
@@ -36,14 +37,19 @@ fun BottomSheetContent(viewModel: HomeViewModel, onClose: () -> Unit) {
         Text(
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            text = "Настройки единиц измерения"
+            text = "Настройки единиц измерения",
+            color = Color.White
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         //Переключатель для температуры
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "Температура в Фаренгейтах", modifier = Modifier.weight(1f))
+            Text(
+                text = "Температура в Фаренгейтах",
+                modifier = Modifier.weight(1f),
+                color = Color.White
+            )
             Switch(
                 checked = isTempInFahrenheit,
                 onCheckedChange = { viewModel.setTempInFahrenheit(it) }
@@ -51,7 +57,7 @@ fun BottomSheetContent(viewModel: HomeViewModel, onClose: () -> Unit) {
         }
         //Переключатель для скорости
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "Скорость в милях/ч", modifier = Modifier.weight(1f))
+            Text(text = "Скорость в милях/ч", modifier = Modifier.weight(1f), color = Color.White)
             Switch(
                 checked = isSpeedInMph,
                 onCheckedChange = { viewModel.setSpeedInMph(it) }
@@ -60,7 +66,7 @@ fun BottomSheetContent(viewModel: HomeViewModel, onClose: () -> Unit) {
 
         //Переключатель для давления
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "Давление в дюймах", modifier = Modifier.weight(1f))
+            Text(text = "Давление в дюймах", modifier = Modifier.weight(1f), color = Color.White)
             Switch(
                 checked = isPressureInInch,
                 onCheckedChange = { viewModel.setPressureInInch(it) }
@@ -69,7 +75,11 @@ fun BottomSheetContent(viewModel: HomeViewModel, onClose: () -> Unit) {
 
         //Переключатель для дальности видимости
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "Дальность видимости в милях", modifier = Modifier.weight(1f))
+            Text(
+                text = "Дальность видимости в милях",
+                modifier = Modifier.weight(1f),
+                color = Color.White
+            )
             Switch(
                 checked = isVisibilityInMiles,
                 onCheckedChange = { viewModel.setVisibilityInMiles(it) }

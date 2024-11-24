@@ -68,7 +68,7 @@ fun HourlyForecast(
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp),
             text = result.data.current.condition.text,
-            color = Color.DarkGray,
+            color = Color.White,
             fontSize = 12.sp,
         )
         HorizontalDivider(
@@ -79,7 +79,7 @@ fun HourlyForecast(
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp)
+                .padding(start = 8.dp)
                 .horizontalScroll(rememberScrollState())
         ) {
             val hourlyForecasts = mutableListOf<Hour>()
@@ -107,12 +107,11 @@ fun HourlyForecast(
 @Composable
 fun HourlyForecastItem(isTempInFahrenheit: Boolean, hour: Hour, ctx: Context) {
     Column(
-
-        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val hourPart = hour.time.substring(11, 13)
-        Text(hourPart)
+        Text(hourPart, color = Color.White)
         AsyncImage(
             modifier = Modifier
                 .size(48.dp),
@@ -127,7 +126,8 @@ fun HourlyForecastItem(isTempInFahrenheit: Boolean, hour: Hour, ctx: Context) {
                 "${hour.temp_f.roundToInt()}°"
             } else {
                 "${hour.temp_c.roundToInt()}°"
-            }
+            },
+            color = Color.White
         )
     }
 }

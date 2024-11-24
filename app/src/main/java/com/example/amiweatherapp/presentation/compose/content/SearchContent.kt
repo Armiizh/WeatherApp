@@ -30,13 +30,14 @@ fun SearchContent(homeViewModel: HomeViewModel, changeVisible: () -> Unit) {
         onValueChange = {
             city = it
         },
-        placeholder = { Text(text = "Москва...", fontSize = 24.sp) },
+        placeholder = { Text(text = "Москва...", fontSize = 24.sp, color = Color.White) },
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
-            focusedContainerColor = Color.Transparent
+            focusedContainerColor = Color.Transparent,
+            focusedTextColor = Color.White
         ),
         trailingIcon = {
             if (city.length > 1) {

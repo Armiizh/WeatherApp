@@ -72,7 +72,7 @@ fun CurrentWeatherInfo(viewModel: HomeViewModel, result: Result.Success<WeatherR
                         "${result.data.current.feelslike_f.roundToInt()}°"
                     } else {
                         "${result.data.current.feelslike_c.roundToInt()}°"
-                    }
+                    },
                 )
             }
             //Второй виджет
@@ -114,26 +114,28 @@ fun CurrentWeatherInfo(viewModel: HomeViewModel, result: Result.Success<WeatherR
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "Ветер")
+                        Text(text = "Ветер",color = Color.White)
                         Text(
                             text = if (isSpeedInMph) {
                                 "${result.data.current.wind_mph.roundToInt()} миль/ч"
                             } else {
                                 "${result.data.current.wind_kph.roundToInt()} км/ч"
-                            }
+                            },
+                            color = Color.White
                         )
                     }
                     Row(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "Порывы ветра")
+                        Text(text = "Порывы ветра",color = Color.White)
                         Text(
                             text = if (isSpeedInMph) {
                                 "${result.data.current.gust_mph.roundToInt()} миль/ч"
                             } else {
                                 "${result.data.current.gust_kph.roundToInt()} км/ч"
-                            }
+                            },
+                            color = Color.White
 
                         )
                     }
@@ -141,8 +143,11 @@ fun CurrentWeatherInfo(viewModel: HomeViewModel, result: Result.Success<WeatherR
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "Направление")
-                        Text(text = "${result.data.current.wind_degree}° ${result.data.current.wind_dir}")
+                        Text(text = "Направление",color = Color.White)
+                        Text(
+                            text = "${result.data.current.wind_degree}° ${result.data.current.wind_dir}",
+                            color = Color.White
+                        )
                     }
                 }
             }
@@ -192,7 +197,8 @@ fun inchesToMillimetersHg(inches: Double): Double {
 fun SmallText(modifier: Modifier = Modifier, text: String) {
     Text(
         modifier = modifier,
-        text = text
+        text = text,
+        color = Color.White
     )
 }
 
@@ -206,13 +212,13 @@ fun WidgetTitle(title: String, iconId: Int) {
             modifier = Modifier.size(16.dp),
             painter = painterResource(iconId),
             contentDescription = null,
-            tint = Color.DarkGray
+            tint = Color.White
         )
         Text(
             modifier = Modifier.padding(start = 8.dp),
             text = title,
             fontSize = 12.sp,
-            color = Color.DarkGray
+            color = Color.White
         )
     }
 }
@@ -227,7 +233,7 @@ fun AmiWeatherWidget(
             .fillMaxWidth()
             .clip(RoundedCornerShape(24.dp))
             .background(Color.LightGray.copy(alpha = .2f))
-            .padding(8.dp) // Добавляем немного внутреннего отступа
+            .padding(8.dp)
     ) {
         content()
     }

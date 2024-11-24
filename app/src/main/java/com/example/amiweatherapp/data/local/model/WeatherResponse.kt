@@ -39,7 +39,9 @@ data class CurrentWeather(
     @SerializedName("gust_kph") val gust_kph: Double,        //Порыв ветра в километрах в час
     @SerializedName("uv") val uv: Double,                    //УФ-индекс
     @SerializedName("pressure_mb") val pressure_mb: Double,  //Давление в миллибарах
-    @SerializedName("pressure_in") val pressure_in: Double   //Давление в дюймах
+    @SerializedName("pressure_in") val pressure_in: Double,  //Давление в дюймах
+    @SerializedName("is_day") val is_day: Int,               //День или ночь
+    @SerializedName("cloud") val cloud: Int,                 //Облачность в процентах
 )
 
 data class Forecast(
@@ -77,10 +79,12 @@ data class Hour(
     @SerializedName("temp_f") val temp_f: Double,        // Температура в градусах Фаренгейта
     @SerializedName("vis_km") val vis_km: Double,        //Видимость в километрах
     @SerializedName("vis_miles") val vis_miles: Double,  //Видимость в милях
+    @SerializedName("is_day") val is_day: Int,           //День или ночь
 )
 
 data class WeatherCondition(
 
     @SerializedName("text") val text: String, //Состояние
-    @SerializedName("icon") val icon: String  //Ссылка на икноку
+    @SerializedName("icon") val icon: String, //Ссылка на икноку
+    @SerializedName("code") val code: Int     //Код иконки
 )

@@ -12,12 +12,4 @@ interface WeatherDao {
     // Метод для вставки данных о прогнозе погоды
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWeatherResponse(weatherResponse: WeatherResponse)
-
-    // Метод для получения всех данных о прогнозе погоды
-    @Query("SELECT * FROM weather_response")
-    suspend fun getAllWeatherResponses(): List<WeatherResponse>
-
-    // Метод для удаления всех данных о прогнозе погоды (если это необходимо)
-    @Query("DELETE FROM weather_response")
-    suspend fun deleteAllWeatherResponses()
 }

@@ -1,7 +1,6 @@
 package com.example.amiweatherapp.presentation
 
 import android.Manifest
-import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -54,6 +53,7 @@ class MainActivity : ComponentActivity() {
                         requestCurrentLocation(homeViewModel)
                     }
                 }
+
                 if (locationPermissionState.hasPermission) {
                     HomeScreen()
                 }
@@ -79,13 +79,6 @@ class MainActivity : ComponentActivity() {
                             )
                             homeViewModel.fetchForecast()
                         }
-
-//                        homeViewModel.viewModelScope.launch {
-//                            homeViewModel.fetchForecast(
-//                                lat = location.latitude.toString(),
-//                                lon = location.longitude.toString()
-//                            )
-//                        }
                         fusedLocationClient.removeLocationUpdates(this)
                     } ?: run {
                         Toast.makeText(

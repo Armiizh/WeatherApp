@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,11 +31,13 @@ fun TopSection(
 ) {
     Text(
         text = "${result.data.location.region}, ${result.data.location.country}",
-        fontSize = 12.sp
+        fontSize = 12.sp,
+        color = Color.White
     )
     Text(
         text = "${result.data.location.lat}, ${result.data.location.lon}",
-        fontSize = 12.sp
+        fontSize = 12.sp,
+        color = Color.White
     )
     val isTempInFahrenheit by viewModel.isTempInFahrenheit.collectAsState()
     Row(
@@ -59,7 +62,8 @@ fun TopSection(
                 "${result.data.current.temp_c.roundToInt()}°"
             },
             fontWeight = FontWeight.Bold,
-            fontSize = 64.sp
+            fontSize = 64.sp,
+            color = Color.White
         )
     }
     Text(
@@ -68,6 +72,7 @@ fun TopSection(
         } else {
             "Ощущается как ${result.data.current.feelslike_c.roundToInt()}°"
         },
-        fontSize = 12.sp
+        fontSize = 12.sp,
+        color = Color.White
     )
 }

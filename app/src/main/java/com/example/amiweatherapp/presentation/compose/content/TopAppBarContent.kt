@@ -28,26 +28,32 @@ fun TopAppBarContent(isTextFieldVisible: Boolean, changeVisible: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "AmiWeatherApp")
+                Text(
+                    text = "AmiWeatherApp",
+                    color = Color.White
+                )
                 IconButton(
                     onClick = { changeVisible() }
                 ) {
                     if (isTextFieldVisible) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "CloseIcon"
+                            contentDescription = "CloseIcon",
+                            tint = Color.White
                         )
                     } else {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = "SearchIcon"
+                            contentDescription = "SearchIcon",
+                            tint = Color.White
                         )
                     }
                 }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent
+            containerColor = Color.Transparent,
+            titleContentColor = Color.White
         )
     )
 }

@@ -73,13 +73,13 @@ private fun ForecastFor7DaysTitle() {
                 modifier = Modifier.size(16.dp),
                 painter = painterResource(id = R.drawable.baseline_calendar_month_24),
                 contentDescription = null,
-                tint = Color.DarkGray
+                tint = Color.White
             )
             Text(
                 modifier = Modifier.padding(start = 8.dp),
                 text = "Прогноз на 7 дней",
                 fontSize = 12.sp,
-                color = Color.DarkGray
+                color = Color.White
             )
         }
         HorizontalDivider(
@@ -113,7 +113,8 @@ private fun ForecastItem(
                 Text(
                     text = dateDisplay(date = forecastDay.date),
                     maxLines = 1,
-                    textAlign = TextAlign.Start
+                    textAlign = TextAlign.Start,
+                    color = Color.White
                 )
                 AsyncImage(
                     modifier = Modifier
@@ -141,7 +142,8 @@ private fun ForecastItem(
                         } else {
                             "${forecastDay.day.mintemp_c.roundToInt()}°"
                         },
-                        maxLines = 1
+                        maxLines = 1,
+                        color = Color.White
                     )
                 }
                 TemperatureGradientBox(
@@ -158,7 +160,8 @@ private fun ForecastItem(
                             "${forecastDay.day.maxtemp_f.roundToInt()}°"
                         } else {
                             "${forecastDay.day.maxtemp_c.roundToInt()}°"
-                        }, maxLines = 1
+                        }, maxLines = 1,
+                        color = Color.White
                     )
                 }
             }

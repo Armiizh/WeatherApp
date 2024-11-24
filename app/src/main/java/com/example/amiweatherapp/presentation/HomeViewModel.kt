@@ -38,6 +38,9 @@ class HomeViewModel @Inject constructor(
         return _lat to _lon
     }
 
+    private val _code = MutableStateFlow(0)
+    val code: StateFlow<Int> get() = _code
+
     //Состояния для переключателей
     private val _isSpeedInMph = MutableStateFlow(false)
     val isSpeedInMph: StateFlow<Boolean> get() = _isSpeedInMph
@@ -57,19 +60,21 @@ class HomeViewModel @Inject constructor(
         _isTempInFahrenheit.value = value
     }
 
-    fun setVisibilityInMiles(value: Boolean) {
-        _isVisibilityInMiles.value = value
-    }
-
     fun setPressureInInch(value: Boolean) {
         _isPressureInInch.value = value
     }
 
+    fun setVisibilityInMiles(value: Boolean) {
+        _isVisibilityInMiles.value = value
+    }
+
+
     suspend fun fetchForecast(city: String? = null) {
         viewModelScope.launch {
-            //Используем координаты, если город не передан
             val (lat, lon) = getCoordinates()
-            _weatherData.value = fetchWeatherUseCase.invoke(city, lat, lon)
+            _weatherData.value = fetchWeatherUseCase.invoke(city, lat, lon) {
+                _code.value = it
+            }
             _dataIsLoading.value = false
         }
     }

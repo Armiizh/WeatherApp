@@ -38,11 +38,16 @@ fun BottomAppBarContent(homeViewModel: HomeViewModel, onBottomSheetOpen: () -> U
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_navigation),
-                        contentDescription = "Navigation icon"
+                        contentDescription = "Navigation icon",
+                        tint = Color.White
                     )
                 }
                 IconButton(onClick = { onBottomSheetOpen() }) {
-                    Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = "Menu",
+                        tint = Color.White
+                    )
                 }
             }
         }
